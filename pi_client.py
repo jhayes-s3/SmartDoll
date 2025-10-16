@@ -1,10 +1,13 @@
+import os
 import asyncio
 import websockets
 
 async def client():
-    uri = "ws://169.254.123.187:8765"  # Replace SERVER_IP with Windows PC's IP
+    server_ip = os.getenv("SERVER_IP", "127.0.0.1")
+    uri = f"ws://{server_ip}:8765"
+    
     async with websockets.connect(uri) as websocket:
-        print("Connected to server!")
+        print(f"Connected to server at {uri}!")
         try:
             while True:
                 message = input("Enter message to send to server (or 'quit' to exit): ")
