@@ -1,6 +1,9 @@
 import os
 import asyncio
 import websockets
+from dotenv import load_dotenv
+
+load_dotenv()
 
 async def client():
     server_ip = os.getenv("SERVER_IP", "127.0.0.1")
