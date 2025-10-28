@@ -1,15 +1,29 @@
 import asyncio
 import websockets
+from openai import AsyncOpenAI
+
+# Initialize the client to point to LM Studio
+client = AsyncOpenAI(
+    base_url="http://localhost:1234/v1",
+    api_key="not-needed" 
+)
+
+
+
 
 async def handle_client(websocket):
     print("Client connected!")
     try:
         async for message in websocket:
             print(f"Received from client: {message}")
-            
-            # Send response back to client
-            response = input("Enter message to send to client: ")
-            await websocket.send(response)
+
+            response = await client.responses.create(
+            model="llama-3.2-3b-instruct",
+            input= message
+            )
+            print(f"LLM Response: {response.output[0].content[0].text}")
+            await websocket.send(response.output[0].content[0].text)
+
     except websockets.exceptions.ConnectionClosed:
         print("Client disconnected")
 
